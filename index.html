@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitFlex</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
+
+body{background: linear-gradient(135deg,#e9d5ff,#fbcfe8);}
+.dark{background:#0f172a;color:white;}
+
+.page{display:none;padding:20px;}
+.active{display:block;}
+
+h1{text-align:center;margin-bottom:10px;}
+
+button{
+padding:12px;border:none;border-radius:10px;
+background:#7c3aed;color:white;margin:5px;width:90%;
+}
+
+input,textarea{
+width:90%;padding:12px;margin:8px 0;
+border-radius:8px;border:1px solid #ccc;
+}
+
+.card{
+background:white;padding:20px;margin:15px 0;border-radius:15px;
+}
+
+.dark .card{background:#1e293b;}
+.center{text-align:center;}
+
+.logo{font-size:40px;font-weight:bold;color:#7c3aed;}
+
+.features-preview{
+display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;
+}
+
+.preview-box{background:white;padding:15px;border-radius:10px;}
+.dark .preview-box{background:#1e293b;}
+</style>
+</head>
+
+<body>
+
+<!-- WELCOME -->
+<div id="welcome" class="page active center">
+  <div class="logo">💪 FitFlex</div>
+  <p>Your Smart Fitness & Health Partner</p>
+
+  <div class="features-preview">
+    <div class="preview-box">⚖️ Weight Check</div>
+    <div class="preview-box">🔥 Fat Loss</div>
+    <div class="preview-box">💪 Muscle Gain</div>
+    <div class="preview-box">🩺 Health Care</div>
+  </div>
+
+  <button onclick="go('auth')">Get Started ➜</button>
+</div>
+
+<!-- AUTH -->
+<div id="auth" class="page center">
+  <h1>Login / Sign Up</h1>
+
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
+
+  <p id="msg"></p>
+</div>
+
+<!-- HOME -->
+<div id="home" class="page">
+  <h1>Your Health Care</h1>
+
+  <button onclick="darkMode()">🌙 Dark Mode</button>
+
+  <!-- AGE -->
+  <div class="card">
+    <h3>Age Based Perfect Weight</h3>
+    <input id="ageWeight">
+    <button onclick="ageWeightFunc()">Check</button>
+    <p id="aw"></p>
+  </div>
+
+  <!-- GAIN -->
+  <div class="card">
+    <h3>Weight Gain (30 Days)</h3>
+    <button onclick="gain()">Plan</button>
+    <p id="g"></p>
+  </div>
+
+  <!-- LOSS -->
+  <div class="card">
+    <h3>Weight Loss (30 Days)</h3>
+    <button onclick="loss()">Plan</button>
+    <p id="l"></p>
+  </div>
+
+  <!-- GYNO -->
+  <div class="card">
+    <h3>Gynecologist Near Me</h3>
+    <button onclick="gyno()">Search</button>
+  </div>
+
+  <!-- PERIOD -->
+  <div class="card">
+    <h3>Period Prediction</h3>
+    <input type="date" id="periodDate">
+    <button onclick="period()">Check</button>
+    <p id="p"></p>
+  </div>
+
+  <!-- PCOS -->
+  <div class="card">
+    <h3>PCOS Care</h3>
+    <button onclick="pcos()">View</button>
+    <p id="pc"></p>
+  </div>
+
+  <!-- ALARM -->
+  <div class="card">
+    <h3>Alarm Clock</h3>
+    <input type="time" id="alarm">
+    <button onclick="setAlarm()">Set</button>
+    <p id="a"></p>
+  </div>
+
+  <!-- WATER -->
+  <div class="card">
+    <h3>Water Reminder</h3>
+    <button onclick="water()">Start</button>
+    <p id="w"></p>
+  </div>
+
+  <!-- STRESS -->
+  <div class="card">
+    <h3>Stress Management</h3>
+    <button onclick="stress()">View</button>
+    <p id="s"></p>
+  </div>
+
+  <!-- ADVICE -->
+  <div class="card">
+    <h3>Share Advice</h3>
+    <textarea id="adviceInput"></textarea>
+    <button onclick="saveAdvice()">Save</button>
+    <p id="adviceList"></p>
+  </div>
+
+  <!-- DIARY -->
+  <div class="card">
+    <h3>Daily Diary</h3>
+    <input type="date" id="diaryDate">
+    <textarea id="diaryText"></textarea>
+    <button onclick="saveDiary()">Save</button>
+    <p id="diaryList"></p>
+  </div>
+
+</div>
+
+<script>
+let isLoggedIn=false;
+
+// NAV
+function go(p){
+  if(p==="home" && !isLoggedIn){
+    msg.innerText="❌ Something went wrong!";
+    return;
+  }
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById(p).classList.add('active');
+}
+
+// AUTH
+function signup(){
+  if(user.value==""||pass.value==""){
+    msg.innerText="❌ Something went wrong!";
+  } else {
+    localStorage.setItem("u",user.value);
+    localStorage.setItem("p",pass.value);
+    msg.innerText="✅ Account Created!";
+  }
+}
+
+function login(){
+  if(user.value===localStorage.getItem("u") && pass.value===localStorage.getItem("p")){
+    isLoggedIn=true;
+    go("home");
+  } else msg.innerText="❌ Invalid details!";
+}
+
+// AGE
+function ageWeightFunc(){
+  aw.innerText="📊 Weight Chart:\n• 18-25 → 50-65kg\n• 26-40 → 55-75kg\n• 40+ → 55-70kg";
+}
+
+// GAIN
+function gain(){
+g.innerText=`📊 30 Days Gain Chart
+
+🥗 Diet:
+• Milk, Banana, Eggs
+• Paneer, Rice, Chicken
+• Dry fruits
+
+🏋️ Exercise:
+• Pushups
+• Squats
+• Gym training
+
+🚫 Avoid:
+• Junk food
+• Skipping meals`;
+}
+
+// LOSS
+function loss(){
+l.innerText=`📊 30 Days Loss Chart
+
+🥗 Diet:
+• Oats, Fruits
+• Salad, Green tea
+
+🏃 Exercise:
+• Running
+• HIIT
+• Walking
+
+🚫 Avoid:
+• Sugar
+• Fried food`;
+}
+
+// GYNO
+function gyno(){
+  window.open("https://www.google.com/search?q=gynecologist+near+me");
+}
+
+// PERIOD
+function period(){
+let d=new Date(periodDate.value);
+d.setDate(d.getDate()+28);
+
+p.innerText=`📊 Period Chart
+
+Next Date: ${d.toDateString()}
+
+🥗 Eat:
+• Iron food
+• Fruits
+• Water
+
+🚫 Avoid:
+• Junk food
+• Cold drinks
+
+🏠 Remedies:
+• Hot bag
+• Ginger tea
+
+💊 Medicine:
+• Meftal (Doctor advice)`;
+}
+
+// PCOS
+function pcos(){
+pc.innerText=`📊 PCOS Chart
+
+Symptoms:
+• Irregular periods
+• Acne
+• Weight gain
+
+Diet:
+• High protein
+• Fruits & veggies
+
+🚫 Avoid:
+• Sugar
+• Junk food`;
+}
+
+// ALARM
+function setAlarm(){
+let t=alarm.value;
+a.innerText="Alarm set: "+t;
+
+setInterval(()=>{
+let now=new Date();
+let cur=now.getHours()+":"+String(now.getMinutes()).padStart(2,'0');
+if(cur===t){
+alert("⏰ Alarm!");
+}
+},1000);
+}
+
+// WATER
+function water(){
+w.innerText=`📊 Daily Water Intake
+
+• Men: 3-4 Liters
+• Women: 2-3 Liters
+
+⏰ Reminder: Every 1 Hour`;
+
+setInterval(()=>alert("💧 Drink Water!"),3600000);
+}
+
+// STRESS
+function stress(){
+s.innerText=`📊 Stress Chart
+
+Mind:
+• Meditation
+• Breathing
+
+Body:
+• Yoga
+• Walking
+
+Lifestyle:
+• Music
+• Sleep`;
+}
+
+// DARK
+function darkMode(){
+document.body.classList.toggle("dark");
+}
+
+// SAVE
+function saveAdvice(){
+let list=JSON.parse(localStorage.getItem("advice")||"[]");
+list.push(adviceInput.value);
+localStorage.setItem("advice",JSON.stringify(list));
+adviceList.innerText=list.join("\n• ");
+}
+
+function saveDiary(){
+let list=JSON.parse(localStorage.getItem("diary")||"[]");
+list.push(diaryDate.value+" : "+diaryText.value);
+localStorage.setItem("diary",JSON.stringify(list));
+diaryList.innerText=list.join("\n");
+}
+</script>
+
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitFlex</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif;}
+
+body{background: linear-gradient(135deg,#e9d5ff,#fbcfe8);}
+.dark{background:#0f172a;color:white;}
+
+.page{display:none;padding:20px;}
+.active{display:block;}
+
+h1{text-align:center;margin-bottom:10px;}
+
+button{
+padding:12px;border:none;border-radius:10px;
+background:#7c3aed;color:white;margin:5px;width:90%;
+}
+
+input,textarea{
+width:90%;padding:12px;margin:8px 0;
+border-radius:8px;border:1px solid #ccc;
+}
+
+.card{
+background:white;padding:20px;margin:15px 0;border-radius:15px;
+}
+
+.dark .card{background:#1e293b;}
+.center{text-align:center;}
+
+.logo{font-size:40px;font-weight:bold;color:#7c3aed;}
+
+.features-preview{
+display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px;
+}
+
+.preview-box{background:white;padding:15px;border-radius:10px;}
+.dark .preview-box{background:#1e293b;}
+</style>
+</head>
+
+<body>
+
+<!-- WELCOME -->
+<div id="welcome" class="page active center">
+  <div class="logo">💪 FitFlex</div>
+  <p>Your Smart Fitness & Health Partner</p>
+
+  <div class="features-preview">
+    <div class="preview-box">⚖️ Weight Check</div>
+    <div class="preview-box">🔥 Fat Loss</div>
+    <div class="preview-box">💪 Muscle Gain</div>
+    <div class="preview-box">🩺 Health Care</div>
+  </div>
+
+  <button onclick="go('auth')">Get Started ➜</button>
+</div>
+
+<!-- AUTH -->
+<div id="auth" class="page center">
+  <h1>Login / Sign Up</h1>
+
+  <input id="user" placeholder="Username">
+  <input id="pass" type="password" placeholder="Password">
+
+  <button onclick="signup()">Sign Up</button>
+  <button onclick="login()">Login</button>
+
+  <p id="msg"></p>
+</div>
+
+<!-- HOME -->
+<div id="home" class="page">
+  <h1>Your Health Care</h1>
+
+  <button onclick="darkMode()">🌙 Dark Mode</button>
+
+  <!-- AGE -->
+  <div class="card">
+    <h3>Age Based Perfect Weight</h3>
+    <input id="ageWeight">
+    <button onclick="ageWeightFunc()">Check</button>
+    <p id="aw"></p>
+  </div>
+
+  <!-- GAIN -->
+  <div class="card">
+    <h3>Weight Gain (30 Days)</h3>
+    <button onclick="gain()">Plan</button>
+    <p id="g"></p>
+  </div>
+
+  <!-- LOSS -->
+  <div class="card">
+    <h3>Weight Loss (30 Days)</h3>
+    <button onclick="loss()">Plan</button>
+    <p id="l"></p>
+  </div>
+
+  <!-- GYNO -->
+  <div class="card">
+    <h3>Gynecologist Near Me</h3>
+    <button onclick="gyno()">Search</button>
+  </div>
+
+  <!-- PERIOD -->
+  <div class="card">
+    <h3>Period Prediction</h3>
+    <input type="date" id="periodDate">
+    <button onclick="period()">Check</button>
+    <p id="p"></p>
+  </div>
+
+  <!-- PCOS -->
+  <div class="card">
+    <h3>PCOS Care</h3>
+    <button onclick="pcos()">View</button>
+    <p id="pc"></p>
+  </div>
+
+  <!-- ALARM -->
+  <div class="card">
+    <h3>Alarm Clock</h3>
+    <input type="time" id="alarm">
+    <button onclick="setAlarm()">Set</button>
+    <p id="a"></p>
+  </div>
+
+  <!-- WATER -->
+  <div class="card">
+    <h3>Water Reminder</h3>
+    <button onclick="water()">Start</button>
+    <p id="w"></p>
+  </div>
+
+  <!-- STRESS -->
+  <div class="card">
+    <h3>Stress Management</h3>
+    <button onclick="stress()">View</button>
+    <p id="s"></p>
+  </div>
+
+  <!-- ADVICE -->
+  <div class="card">
+    <h3>Share Advice</h3>
+    <textarea id="adviceInput"></textarea>
+    <button onclick="saveAdvice()">Save</button>
+    <p id="adviceList"></p>
+  </div>
+
+  <!-- DIARY -->
+  <div class="card">
+    <h3>Daily Diary</h3>
+    <input type="date" id="diaryDate">
+    <textarea id="diaryText"></textarea>
+    <button onclick="saveDiary()">Save</button>
+    <p id="diaryList"></p>
+  </div>
+
+</div>
+
+<script>
+let isLoggedIn=false;
+
+// NAV
+function go(p){
+  if(p==="home" && !isLoggedIn){
+    msg.innerText="❌ Something went wrong!";
+    return;
+  }
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.getElementById(p).classList.add('active');
+}
+
+// AUTH
+function signup(){
+  if(user.value==""||pass.value==""){
+    msg.innerText="❌ Something went wrong!";
+  } else {
+    localStorage.setItem("u",user.value);
+    localStorage.setItem("p",pass.value);
+    msg.innerText="✅ Account Created!";
+  }
+}
+
+function login(){
+  if(user.value===localStorage.getItem("u") && pass.value===localStorage.getItem("p")){
+    isLoggedIn=true;
+    go("home");
+  } else msg.innerText="❌ Invalid details!";
+}
+
+// AGE
+function ageWeightFunc(){
+  aw.innerText="📊 Weight Chart:\n• 18-25 → 50-65kg\n• 26-40 → 55-75kg\n• 40+ → 55-70kg";
+}
+
+// GAIN
+function gain(){
+g.innerText=`📊 30 Days Gain Chart
+
+🥗 Diet:
+• Milk, Banana, Eggs
+• Paneer, Rice, Chicken
+• Dry fruits
+
+🏋️ Exercise:
+• Pushups
+• Squats
+• Gym training
+
+🚫 Avoid:
+• Junk food
+• Skipping meals`;
+}
+
+// LOSS
+function loss(){
+l.innerText=`📊 30 Days Loss Chart
+
+🥗 Diet:
+• Oats, Fruits
+• Salad, Green tea
+
+🏃 Exercise:
+• Running
+• HIIT
+• Walking
+
+🚫 Avoid:
+• Sugar
+• Fried food`;
+}
+
+// GYNO
+function gyno(){
+  window.open("https://www.google.com/search?q=gynecologist+near+me");
+}
+
+// PERIOD
+function period(){
+let d=new Date(periodDate.value);
+d.setDate(d.getDate()+28);
+
+p.innerText=`📊 Period Chart
+
+Next Date: ${d.toDateString()}
+
+🥗 Eat:
+• Iron food
+• Fruits
+• Water
+
+🚫 Avoid:
+• Junk food
+• Cold drinks
+
+🏠 Remedies:
+• Hot bag
+• Ginger tea
+
+💊 Medicine:
+• Meftal (Doctor advice)`;
+}
+
+// PCOS
+function pcos(){
+pc.innerText=`📊 PCOS Chart
+
+Symptoms:
+• Irregular periods
+• Acne
+• Weight gain
+
+Diet:
+• High protein
+• Fruits & veggies
+
+🚫 Avoid:
+• Sugar
+• Junk food`;
+}
+
+// ALARM
+function setAlarm(){
+let t=alarm.value;
+a.innerText="Alarm set: "+t;
+
+setInterval(()=>{
+let now=new Date();
+let cur=now.getHours()+":"+String(now.getMinutes()).padStart(2,'0');
+if(cur===t){
+alert("⏰ Alarm!");
+}
+},1000);
+}
+
+// WATER
+function water(){
+w.innerText=`📊 Daily Water Intake
+
+• Men: 3-4 Liters
+• Women: 2-3 Liters
+
+⏰ Reminder: Every 1 Hour`;
+
+setInterval(()=>alert("💧 Drink Water!"),3600000);
+}
+
+// STRESS
+function stress(){
+s.innerText=`📊 Stress Chart
+
+Mind:
+• Meditation
+• Breathing
+
+Body:
+• Yoga
+• Walking
+
+Lifestyle:
+• Music
+• Sleep`;
+}
+
+// DARK
+function darkMode(){
+document.body.classList.toggle("dark");
+}
+
+// SAVE
+function saveAdvice(){
+let list=JSON.parse(localStorage.getItem("advice")||"[]");
+list.push(adviceInput.value);
+localStorage.setItem("advice",JSON.stringify(list));
+adviceList.innerText=list.join("\n• ");
+}
+
+function saveDiary(){
+let list=JSON.parse(localStorage.getItem("diary")||"[]");
+list.push(diaryDate.value+" : "+diaryText.value);
+localStorage.setItem("diary",JSON.stringify(list));
+diaryList.innerText=list.join("\n");
+}
+</script>
+
+</body>
